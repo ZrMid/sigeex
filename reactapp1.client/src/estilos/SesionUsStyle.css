@@ -1,0 +1,256 @@
+/*color degradado fondo*/
+.mainSesion {
+    background-color: rgb(255, 255, 255);
+    background: linear-gradient(to right, #b2cde4, #ffffff);
+}
+/*centrado del contenido*/
+.mainSesion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container samp {
+    font-size: small;
+    color: #8a9095;
+}
+/*Logo centrado*/
+.logHeader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/*Base del contenido **cuadro blanco*/
+.container {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 35);
+    position: relative;
+    overflow: hidden;
+    width: 900px;
+    max-width: 100%;
+    min-height: 465px;
+}
+
+    .container p {
+        font-size: 14px;
+        line-height: 1px;
+        letter-spacing: 0.3px;
+        word-spacing: 0px;
+        margin: 20px 0;
+    }
+
+    .container span {
+        font-size: 19px;
+    }
+    /*Color de iconos y tamaño*/
+    .container a {
+        color: #333;
+        font-size: 13px;
+        text-decoration: none;
+        margin: 15px 0 10px;
+    }
+    /*color tamaño y bordado de botones*/
+    .container button {
+        background-color: rgb(70, 132, 179);
+        color: #ffffff;
+        font-size: 12px;
+        padding: 10px 45px;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        margin-top: 5px;
+        cursor: pointer;
+    }
+        /*Botones de panales de movimiento*/
+        .container button.hidden {
+            background-color: transparent;
+            border-color: #ffffff;
+        }
+    /*parte interactiva
+inicio sesion y registro*/
+    .container form {
+        background-color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 0 100px;
+        height: 100%;
+    }
+
+.form-Rcontainer {
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    height: 100%;
+    transition: all 0.6s ease-in-out;
+}
+/*barras de inicio sesion y registro*/
+.form-container input {
+    background-color: #eeeeee;
+    border: transparent;
+    border-radius: 2px;
+    margin: 8px 0;
+    padding: 5px 5px;
+    font-size: 13px;
+    border-radius: 8px;
+    width: 150%;
+    outline: none;
+    margin: 15px 0;
+}
+
+.form-Rcontainer input {
+    background-color: #eeeeee;
+    border: transparent;
+    border-radius: 2px;
+    margin: 8px 0;
+    padding: 5px 5px;
+    font-size: 13px;
+    border-radius: 8px;
+    width: 100%;
+    outline: none;
+}
+
+.form-container {
+    position: absolute;
+    top: 0px;
+    height: 100%;
+    transition: all 0.6s ease-in-out;
+}
+
+.iniciar-Sesion {
+    left: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+.container.active .iniciar-Sesion {
+    transform: translateX(100%);
+}
+
+.iniciar-Sesion {
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    z-index: 1;
+}
+
+.container.active .iniciar-Sesion {
+    transform: translateX(100%);
+    opacity: 1;
+    z-index: 5;
+    animation: move 0.6s;
+}
+
+@keyframes move {
+    0%, 49.99% {
+        opacity: 0;
+        z-index: 1;
+    }
+
+    50%, 100% {
+        opacity: 1;
+        z-index: 5;
+    }
+}
+/*iconos boton y iconos sueltos*/
+.btn {
+    padding: 5px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+    .btn i {
+        margin-right: 5px; /* Espacio entre el icono y el texto */
+        font-size: 20px;
+        align-items: center;
+    }
+/*Paneles*/
+.Alternar-constainer {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    transition: all 0.6s ease-in-out;
+    border-radius: 150px 0 0 100px;
+    z-index: 1000;
+}
+
+.container.active .Alternar-constainer {
+    transform: translateX(-100%);
+    border-radius: 0 150px 100px 0;
+}
+
+.Alternar {
+    background: #0A5DA6;
+    height: 100%;
+    color: #ffffff;
+    position: relative;
+    background: linear-gradient(to right, #6a95cd, #3475bb, #0A5DA6);
+    left: -100%;
+    height: 100%;
+    width: 200%;
+    transform: translateX(0);
+    transition: all 0.6s ease-in-out;
+}
+
+.container.active .Alternar {
+    transform: translateX(50%);
+}
+
+.Alternar-Panel {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    top: 0;
+    transform: translateX(0);
+    transition: all 0.6s ease-in-out;
+}
+
+.toggle-left {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    top: 0;
+    transform: translateX(0);
+    transition: all 0.6s ease-in-out;
+}
+
+.toggle-left {
+    transform: translateX(-200%);
+}
+
+.container.active .toggle-left {
+    transform: translateX(0);
+}
+
+.Alternar-Derecho {
+    right: 0;
+    transform: translateX(0);
+}
+
+.container.active .Alternar-Derecho {
+    transform: translateX(200%);
+}

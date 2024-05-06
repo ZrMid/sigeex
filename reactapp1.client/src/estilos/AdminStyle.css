@@ -1,0 +1,60 @@
+.navMain {
+    padding: 20px;
+    background-color: var(--main-color);
+    width: var(--width-nav);
+}
+
+.navMain ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.navMain ul li {
+    color: rgb(238, 238, 238);
+    font-weight: bold;
+    padding: 4px 0;
+    cursor: pointer;
+    position: relative;
+}
+
+.navMain ul li::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+}
+
+.navMain ul li:hover::before {
+    background-color: white;
+}
+
+.contenidoPrin__Down{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:10px
+}
+
+.btnAdd {
+    margin: 5px;
+    border: none;
+    background-color: var(--main-color);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0px 5px 5px #ccc;
+    width: 130px;
+}
+
+.contenidoPrin {
+    background-color: rgb(240, 240, 240);
+    width: calc(100% - var(--width-nav));
+    padding: 20px;
+}
