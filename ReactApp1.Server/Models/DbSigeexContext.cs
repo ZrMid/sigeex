@@ -225,7 +225,7 @@ public partial class DbSigeexContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.IdtipoProfesor)
-                .HasDefaultValueSql("((0))")
+                .HasDefaultValueSql("((1))")
                 .HasColumnName("IDTipoProfesor");
             entity.Property(e => e.IdtipoUsuario)
                 .HasDefaultValueSql("((3))")
