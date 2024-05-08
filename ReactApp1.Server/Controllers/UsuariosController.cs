@@ -60,13 +60,25 @@ namespace ReactApp1.Server.Controllers
             
         }
 
+        [HttpPost]
+        [Route("Editar/{id:int}")]
+        public async Task<IActionResult> Editar(int id)
+        {
+            Usuario fila = _dbSigeexContext.Usuarios.Find(id);
+
+            _dbSigeexContext.Usuarios.Update(fila);
+            await _dbSigeexContext.SaveChangesAsync();
+
+            return StatusCode(StatusCodes.Status200OK, "ok");
+        }
+
         [HttpDelete]
         [Route("Delete/{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            Usuario usuario = _dbSigeexContext.Usuarios.Find(id);
+            Usuario fila = _dbSigeexContext.Usuarios.Find(id);
 
-            _dbSigeexContext.Usuarios.Remove(usuario);
+            _dbSigeexContext.Usuarios.Remove(fila);
             await _dbSigeexContext.SaveChangesAsync();
 
             return StatusCode(StatusCodes.Status200OK, "ok");

@@ -10,33 +10,42 @@ export const Admin = () => {
     const [rowToEdit, setRowToEdit] = useState(null);
     const [columnas, setColumnas] = useState([]);
     const [rows, setRows] = useState([]);
+    const [ruta, setRuta] = useState("");
 
     const cambiarTabla = async (e) => {
         const tablaSel = e.target.getAttribute('name');
         switch (tablaSel) {
             case "Usuarios":
                 await getDatos('usuarios/AllUsers');
+                setRuta('usuarios');
                 break;
             case "Clases":
                 await getDatos('clases/AllClases');
+                setRuta('clases');
                 break;
             case "UsuariosClases":
                 await getDatos('usuarioclases/AllUsuarioClases');
+                setRuta('usuarioclases');
                 break;
             case "ProgramaEducativo":
                 await getDatos('programaeducativos/AllProgramaEducativos');
+                setRuta('programaeducativos');
                 break;
             case "Materias":
                 await getDatos('materias/AllMaterias');
+                setRuta('materias');
                 break;
             case "Academias":
                 await getDatos('academias/AllAcademias');
+                setRuta('academias');
                 break;
             case "Catalogos":
                 await getDatos('catalogos/AllCatalogos');
+                setRuta('catalogos');
                 break;
             case "Bloques":
                 await getDatos('bloques/AllBloques');
+                setRuta('bloques');
                 break;
             default:
                 break;
@@ -45,11 +54,28 @@ export const Admin = () => {
         setTablaHook(e.target.textContent);
     }
 
-    const handleDeleteRow = (targetIndex) => {
-        setRows(rows.filter((info) => {
-            const primeraClave = Object.entries(info)[0][1];
-            return (primeraClave !== targetIndex);
-        }));
+    const handleDeleteRow = async (targetIndex) => {
+        const confirmacion = window.confirm(
+            `¿Desea borrar los datos del id: ${targetIndex}?`
+        );
+
+        if (confirmacion) {
+            const response = await fetch(`api/${ruta}/delete/${targetIndex}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json;charset=utf-8",
+                }
+            });
+            if (!response.ok) {
+                console.log(response.statusText);
+            } else {
+                setRows(rows.filter((info) => {
+                    const primeraClave = Object.entries(info)[0][1];
+                    return (primeraClave !== targetIndex);
+                }));
+            }
+        }
+
     };
 
     const handleEditRow = (idx) => {
@@ -58,17 +84,60 @@ export const Admin = () => {
         setModalOpen(true);
     };
 
-    const handleSubmit = (newRow) => {
-        rowToEdit === null
-            ? (
-                //falta fetch para agregar
-                true
-            )
-            : (
-                //falta hacer el editar
-                true
-            );
-        getDatos();
+    const handleSubmit = async (newRow) => {
+        if (rowToEdit === null) {
+            const response = {};
+            switch (tablaHook) {
+                case "Usuarios":
+                    response = await fetch("api/usuarios/Register", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json;charset=utf-8",
+                        },
+                        body: JSON.stringify(newRow),
+                    });
+                    break;
+                default:
+                    alert("errorTabla");
+                    break;
+            }
+            if (response.ok) {
+                alert("Registro exitoso :D");
+            } else {
+                alert("Error al registrar");
+            }
+        } else {
+            const filaEdit = rows.filter((fila) => {
+                return Object.entries(fila)[0][1] == rowToEdit;
+            });
+
+            const filaFinal = { ...filaEdit[0], ...newRow };
+
+            const pares = Object.entries(filaFinal);
+            pares.shift();
+            const nuevoObjeto = Object.fromEntries(pares);
+
+            console.log(nuevoObjeto);
+
+            switch (tablaHook) {
+                case "Usuarios":
+                    const response = await fetch("api/usuarios/Register", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json;charset=utf-8",
+                        },
+                        body: JSON.stringify(nuevoObjeto),
+                    });
+                    break;
+                default:
+                    break;
+            }
+            if (response.ok) {
+                alert("Registro exitoso :D");
+            } else {
+                alert("Error al registrar");
+            }
+        };
     };
 
     const getDatos = async (url) => {
@@ -83,6 +152,7 @@ export const Admin = () => {
             console.log(response.statusText);
         } else {
             const data = await response.json();
+            console.log(data);
             if (data.length != 0) {
                 setRows(data);
                 const keys = Object.keys(data[0]);
@@ -97,8 +167,6 @@ export const Admin = () => {
                 setColumnas([]);
             }
         }
-
-        return true;
     }
 
     return (
@@ -136,11 +204,10 @@ export const Admin = () => {
                                     setRowToEdit(null);
                                 }}
                                 onSubmit={handleSubmit}
-                                defaultValue={rowToEdit !== null ? rows.find((row)=>{
+                                defaultValue={rowToEdit !== null ? rows.find((row) => {
                                     return Object.entries(row)[0][1] === rowToEdit
                                 }) : null}
                                 columns={columnas}
-                                setRows={setRows}
                                 nombreTabla={tablaHook}
                             />
                         ) : null}

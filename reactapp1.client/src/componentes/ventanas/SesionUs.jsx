@@ -77,8 +77,6 @@ function SesionUs() {
             "correo": correo
         };
 
-        console.log(datosRegister);
-
         const response = await fetch("api/usuarios/Register", {
             method: "POST",
             headers: {
@@ -112,9 +110,6 @@ function SesionUs() {
             });
         }
     }, []);
-
-
-
 
     return (
         <>

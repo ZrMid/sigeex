@@ -23,5 +23,17 @@ namespace ReactApp1.Server.Controllers
 
             return StatusCode(StatusCodes.Status200OK, lista);
         }
+
+        [HttpDelete]
+        [Route("Delete/{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            ProgramaEducativo fila = _dbSigeexContext.ProgramaEducativos.Find(id);
+
+            _dbSigeexContext.ProgramaEducativos.Remove(fila);
+            await _dbSigeexContext.SaveChangesAsync();
+
+            return StatusCode(StatusCodes.Status200OK, "ok");
+        }
     }
 }
