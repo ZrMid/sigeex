@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 /* eslint-disable no-unused-vars */
 import { useState } from 'react';
 import '/src/estilos/AdminStyle.css'
@@ -23,11 +24,11 @@ export const Admin = () => {
                 await getDatos('clases/AllClases');
                 setRuta('clases');
                 break;
-            case "UsuariosClases":
+            case "UsuarioClases":
                 await getDatos('usuarioclases/AllUsuarioClases');
-                setRuta('usuarioclases');
+                setRuta('UsuarioClases');
                 break;
-            case "ProgramaEducativo":
+            case "ProgramaEducativos":
                 await getDatos('programaeducativos/AllProgramaEducativos');
                 setRuta('programaeducativos');
                 break;
@@ -51,7 +52,7 @@ export const Admin = () => {
                 break;
         }
 
-        setTablaHook(e.target.textContent);
+        setTablaHook(tablaSel);
     }
 
     const handleDeleteRow = async (targetIndex) => {
@@ -60,7 +61,7 @@ export const Admin = () => {
         );
 
         if (confirmacion) {
-            const response = await fetch(`api/${ruta}/delete/${targetIndex}`, {
+            const response = await fetch(`api/${ruta.toLowerCase()}/delete/${targetIndex}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json;charset=utf-8",
@@ -86,25 +87,18 @@ export const Admin = () => {
 
     const handleSubmit = async (newRow) => {
         if (rowToEdit === null) {
-            const response = {};
-            switch (tablaHook) {
-                case "Usuarios":
-                    response = await fetch("api/usuarios/Register", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json;charset=utf-8",
-                        },
-                        body: JSON.stringify(newRow),
-                    });
-                    break;
-                default:
-                    alert("errorTabla");
-                    break;
-            }
+            let response = {};
+            response = await fetch(`api/${tablaHook.toLowerCase()}/Register`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify(newRow),
+            });
             if (response.ok) {
                 alert("Registro exitoso :D");
             } else {
-                alert("Error al registrar");
+                console.log(response.statusText);
             }
         } else {
             const filaEdit = rows.filter((fila) => {
@@ -117,27 +111,19 @@ export const Admin = () => {
             pares.shift();
             const nuevoObjeto = Object.fromEntries(pares);
 
-            console.log(nuevoObjeto);
-
-            switch (tablaHook) {
-                case "Usuarios":
-                    const response = await fetch("api/usuarios/Register", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json;charset=utf-8",
-                        },
-                        body: JSON.stringify(nuevoObjeto),
-                    });
-                    break;
-                default:
-                    break;
-            }
+            let response = await fetch(`api/${tablaHook.toLowerCase()}/Editar/${rowToEdit}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify(nuevoObjeto),
+            });
             if (response.ok) {
-                alert("Registro exitoso :D");
+                alert("Modificacion exitosa");
             } else {
                 alert("Error al registrar");
             }
-        };
+        }
     };
 
     const getDatos = async (url) => {
@@ -152,7 +138,6 @@ export const Admin = () => {
             console.log(response.statusText);
         } else {
             const data = await response.json();
-            console.log(data);
             if (data.length != 0) {
                 setRows(data);
                 const keys = Object.keys(data[0]);
@@ -175,8 +160,8 @@ export const Admin = () => {
                 <ul>
                     <li onClick={cambiarTabla} name="Usuarios">Usuarios</li>
                     <li onClick={cambiarTabla} name="Clases">Clases</li>
-                    <li onClick={cambiarTabla} name="UsuariosClases">UsuariosClases</li>
-                    <li onClick={cambiarTabla} name="ProgramaEducativo">ProgramaEducativo</li>
+                    <li onClick={cambiarTabla} name="UsuarioClases">UsuariosClases</li>
+                    <li onClick={cambiarTabla} name="ProgramaEducativos">ProgramaEducativos</li>
                     <li onClick={cambiarTabla} name="Materias">Materias</li>
                     <li onClick={cambiarTabla} name="Academias">Academias</li>
                     <li onClick={cambiarTabla} name="Catalogos">Catalogos</li>

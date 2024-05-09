@@ -62,15 +62,29 @@ namespace ReactApp1.Server.Controllers
 
         [HttpPost]
         [Route("Editar/{id:int}")]
-        public async Task<IActionResult> Editar(int id)
+        public async Task<IActionResult> Editar([FromBody] Usuario us, int id)
         {
-            Usuario fila = _dbSigeexContext.Usuarios.Find(id);
+            var usuarioExistente = await _dbSigeexContext.Usuarios.FindAsync(id);
 
-            _dbSigeexContext.Usuarios.Update(fila);
+            if (usuarioExistente == null)
+            {
+                return NotFound(new { message = "Usuario no encontrado." });
+            }
+
+            usuarioExistente.NombreUsuario = us.NombreUsuario ?? usuarioExistente.NombreUsuario;
+            usuarioExistente.Contrasena = us.Contrasena ?? usuarioExistente.Contrasena;
+            usuarioExistente.Nombre = us.Nombre ?? usuarioExistente.Nombre;
+            usuarioExistente.Apellido = us.Apellido ?? usuarioExistente.Apellido;
+            usuarioExistente.Correo = us.Correo ?? usuarioExistente.Correo;
+            usuarioExistente.IdtipoUsuario = us.IdtipoUsuario ?? usuarioExistente.IdtipoUsuario;
+            usuarioExistente.IdtipoProfesor = us.IdtipoProfesor ?? usuarioExistente.IdtipoProfesor;
+            usuarioExistente.PermisoPendiente = us.PermisoPendiente ?? usuarioExistente.PermisoPendiente;
+
             await _dbSigeexContext.SaveChangesAsync();
 
-            return StatusCode(StatusCodes.Status200OK, "ok");
+            return StatusCode(StatusCodes.Status200OK, new { message = "Usuario actualizado exitosamente." });
         }
+
 
         [HttpDelete]
         [Route("Delete/{id:int}")]

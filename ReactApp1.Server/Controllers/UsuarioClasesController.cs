@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ReactApp1.Server.Models;
 
 namespace ReactApp1.Server.Controllers
@@ -19,9 +20,40 @@ namespace ReactApp1.Server.Controllers
         [Route("AllUsuarioClases")]
         public async Task<IActionResult> AllUsuarioClases()
         {
-            List<UsuarioClase> lista = _dbSigeexContext.UsuarioClases.OrderByDescending(t => t.IdusuarioClase).ToList();
+            List<UsuarioClaseGetTab> lista = _dbSigeexContext.UsuarioClaseGetTabs.OrderByDescending(t => t.IdusuarioClase).ToList();
 
             return StatusCode(StatusCodes.Status200OK, lista);
+        }
+
+        [HttpPost]
+        [Route("Register")]
+        public async Task<IActionResult> Register([FromBody] UsuarioClase data)
+        {
+
+            await _dbSigeexContext.UsuarioClases.AddAsync(data);
+            await _dbSigeexContext.SaveChangesAsync();
+
+            return Ok(new { message = "Usuario registrado exitosamente." });
+
+        }
+
+        [HttpPost]
+        [Route("Editar/{id:int}")]
+        public async Task<IActionResult> Editar(int id, [FromBody] UsuarioClase updatedUsuarioClase)
+        {
+            var usuarioClaseExistente = await _dbSigeexContext.Set<UsuarioClase>().FindAsync(id);
+
+            if (usuarioClaseExistente == null)
+            {
+                return NotFound(new { message = "UsuarioClase no encontrado." });
+            }
+
+            usuarioClaseExistente.Idusuario = updatedUsuarioClase.Idusuario != 0 ? updatedUsuarioClase.Idusuario : usuarioClaseExistente.Idusuario;
+            usuarioClaseExistente.Idclase = updatedUsuarioClase.Idclase != 0 ? updatedUsuarioClase.Idclase : usuarioClaseExistente.Idclase;
+
+            await _dbSigeexContext.SaveChangesAsync();
+
+            return Ok(new { message = "UsuarioClase actualizado exitosamente." });
         }
 
         [HttpDelete]

@@ -24,17 +24,5 @@ namespace ReactApp1.Server.Controllers
 
             return StatusCode(StatusCodes.Status200OK, lista);
         }
-
-        [HttpDelete]
-        [Route("Delete/{id:int}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            TiposUsuario fila = _dbSigeexContext.TiposUsuarios.Find(id);
-
-            _dbSigeexContext.TiposUsuarios.Remove(fila);
-            await _dbSigeexContext.SaveChangesAsync();
-
-            return StatusCode(StatusCodes.Status200OK, "ok");
-        }
     }
 }

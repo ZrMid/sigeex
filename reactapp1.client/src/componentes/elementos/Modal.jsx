@@ -10,25 +10,97 @@ export const Modal = ({ closeModal, onSubmit, defaultValue, columns, nombreTabla
     const [errors, setErrors] = useState("");
     const [tipoUsuariosHook, setTipoUsuariosHook] = useState([{ id: 0, tit: "cargando..." }]);
     const [tipoProfesorHook, setTipoProfesorHook] = useState([{ id: 0, tit: "cargando..." }]);
+    const [profesorHook, setProfesorHook] = useState([{ id: 0, tit: "cargando..." }]);
+    const [planEducativoHook, setPlanEducativoHook] = useState([{ id: 0, tit: "cargando..." }]);
+    const [academiaHook, setAcademiaHook] = useState([{ id: 0, tit: "cargando..." }]);
+    const [catalogoHook, setCatalogoHook] = useState([{ id: 0, tit: "cargando..." }]);
+    const [bloqueHook, setBloqueHook] = useState([{ id: 0, tit: "cargando..." }]);
+    const [materiaHook, setMateriaHook] = useState([{ id: 0, tit: "cargando..." }]);
+    const [clasesHook, setClasesHook] = useState([{ id: 0, tit: "cargando..." }]);
+    const [usuariosHook, setUsuariosHook] = useState([{ id: 0, tit: "cargando..." }]);
 
     useEffect(() => {
         const fetchData = async () => {
             if (nombreTabla == "Usuarios") {
-                const typeUsers = await fetch(`api/tiposusuarios/AllTypeUsers`, {
+                let data = await fetch(`api/tiposusuarios/AllTypeUsers`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json;charset=utf-8",
                     }
                 });
-                setTipoUsuariosHook(await typeUsers.json());
+                setTipoUsuariosHook(await data.json());
 
-                const typeProfes = await fetch(`api/tiposprofesores/AllTypeProfesores`, {
+                data = await fetch(`api/tiposprofesores/AllTypeProfesores`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json;charset=utf-8",
                     }
                 });
-                setTipoProfesorHook(await typeProfes.json());
+                setTipoProfesorHook(await data.json());
+            } else if (nombreTabla == "Clases") {
+                let data1 = await fetch(`api/usuarios/AllUsers`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8",
+                    }
+                });
+                setProfesorHook(await data1.json());
+
+                let data2 = await fetch(`api/programaeducativos/AllProgramaEducativos`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8",
+                    }
+                });
+                setPlanEducativoHook(await data2.json());
+
+                let data3 = await fetch(`api/academias/AllAcademias`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8",
+                    }
+                });
+                setAcademiaHook(await data3.json());
+
+                let data4 = await fetch(`api/catalogos/AllCatalogos`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8",
+                    }
+                });
+                setCatalogoHook(await data4.json());
+
+                let data5 = await fetch(`api/bloques/AllBloques`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8",
+                    }
+                });
+                setBloqueHook(await data5.json());
+
+                let data6 = await fetch(`api/materias/AllMaterias`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8",
+                    }
+                });
+                setMateriaHook(await data6.json());
+            }else if(nombreTabla == "UsuarioClases"){
+                let data = await fetch(`api/usuarios/AllUsers`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8",
+                    }
+                });
+                setUsuariosHook(await data.json());
+
+                data = await fetch(`api/clases/AllClases`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8",
+                    }
+                });
+                setClasesHook(await data.json());
             }
         }
 
@@ -65,6 +137,8 @@ export const Modal = ({ closeModal, onSubmit, defaultValue, columns, nombreTabla
         e.preventDefault();
 
         //if (!validateForm()) return;
+
+        console.log(formState);
 
         onSubmit(formState);
 
@@ -120,6 +194,174 @@ export const Modal = ({ closeModal, onSubmit, defaultValue, columns, nombreTabla
                 }
 
                 break;
+            case "Clases":
+                if (column.key === "nombreUsuario") {
+                    const options = profesorHook.map((tipo) => {
+                        const valor = parseInt(Object.entries(tipo)[0][1]);
+                        const seleccion = Object.entries(tipo)[1][1];
+                        if (formState !== null && seleccion === formState["nombreUsuario"]) {
+                            return (< option value={valor} key={valor} selected>{seleccion}</option>)
+                        }
+                        return (< option value={valor} key={valor}>{seleccion}</option>)
+                    })
+
+                    return (
+                        <div className="form-group" key="idprofesor">
+                            <label htmlFor="idprofesor">Profesor</label>
+                            <select name="idprofesor" onChange={handleChange}>
+                                <option value="">Seleccione una opción</option>
+                                {options}
+                            </select>
+                        </div >)
+                } else if (column.key === "nombrePlanPrograma") {
+                    const options = planEducativoHook.map((tipo) => {
+                        const valor = parseInt(Object.entries(tipo)[0][1]);
+                        const seleccion = Object.entries(tipo)[1][1];
+                        if (formState !== null && seleccion === formState["nombrePlanPrograma"]) {
+                            return (< option value={valor} key={valor} selected>{seleccion}</option>)
+                        }
+                        return (< option value={valor} key={valor}>{seleccion}</option>)
+                    })
+
+                    return (
+                        <div className="form-group" key="idplanProgramaEducativo">
+                            <label htmlFor="idplanProgramaEducativo">ProgramaEducativo</label>
+                            <select name="idplanProgramaEducativo" onChange={handleChange}>
+                                <option value="">Seleccione una opción</option>
+                                {options}
+                            </select>
+                        </div >)
+                } else if (column.key === "nombreAcademia") {
+                    const options = academiaHook.map((tipo) => {
+                        const valor = parseInt(Object.entries(tipo)[0][1]);
+                        const seleccion = Object.entries(tipo)[1][1];
+                        if (formState !== null && seleccion === formState["nombreAcademia"]) {
+                            return (< option value={valor} key={valor} selected>{seleccion}</option>)
+                        }
+                        return (< option value={valor} key={valor}>{seleccion}</option>)
+                    })
+
+                    return (
+                        <div className="form-group" key="idacademia">
+                            <label htmlFor="idacademia">Academia</label>
+                            <select name="idacademia" onChange={handleChange}>
+                                <option value="">Seleccione una opción</option>
+                                {options}
+                            </select>
+                        </div >)
+                } else if (column.key === "nombreCatalogo") {
+                    const options = catalogoHook.map((tipo) => {
+                        const valor = parseInt(Object.entries(tipo)[0][1]);
+                        const seleccion = Object.entries(tipo)[1][1];
+                        if (formState !== null && seleccion === formState["nombreCatalogo"]) {
+                            return (< option value={valor} key={valor} selected>{seleccion}</option>)
+                        }
+                        return (< option value={valor} key={valor}>{seleccion}</option>)
+                    })
+
+                    return (
+                        <div className="form-group" key="idcatalogo">
+                            <label htmlFor="idcatalogo">Catalogo</label>
+                            <select name="idcatalogo" onChange={handleChange}>
+                                <option value="">Seleccione una opción</option>
+                                {options}
+                            </select>
+                        </div >)
+                } else if (column.key === "nombreBloque") {
+                    const options = bloqueHook.map((tipo) => {
+                        const valor = parseInt(Object.entries(tipo)[0][1]);
+                        const seleccion = Object.entries(tipo)[1][1];
+                        if (formState !== null && seleccion === formState["nombreBloque"]) {
+                            return (< option value={valor} key={valor} selected>{seleccion}</option>)
+                        }
+                        return (< option value={valor} key={valor}>{seleccion}</option>)
+                    })
+
+                    return (
+                        <div className="form-group" key="idbloque">
+                            <label htmlFor="idbloque">Bloque</label>
+                            <select name="idbloque" onChange={handleChange}>
+                                <option value="">Seleccione una opción</option>
+                                {options}
+                            </select>
+                        </div >)
+                } else if (column.key === "nombreMateria") {
+                    const options = materiaHook.map((tipo) => {
+                        const valor = parseInt(Object.entries(tipo)[0][1]);
+                        const seleccion = Object.entries(tipo)[1][1];
+                        if (formState !== null && seleccion === formState["nombreMateria"]) {
+                            return (< option value={valor} key={valor} selected>{seleccion}</option>)
+                        }
+                        return (< option value={valor} key={valor}>{seleccion}</option>)
+                    })
+
+                    return (
+                        <div className="form-group" key="idmateria">
+                            <label htmlFor="idmateria">Materia</label>
+                            <select name="idmateria" onChange={handleChange}>
+                                <option value="">Seleccione una opción</option>
+                                {options}
+                            </select>
+                        </div >)
+                } else {
+                    return (
+                        <div className="form-group" key={column.key}>
+                            <label htmlFor={column.key}>{column.label}</label>
+                            {idx == 0 ?
+                                <input name={column.key} onChange={null} value={formState !== null ? formState[column.key] : null} disabled />
+                                : <input name={column.key} onChange={handleChange} value={formState !== null ? formState[column.key] : null} />
+                            }
+                        </div>)
+                }
+                break;
+            case "UsuarioClases":
+                if (column.key === "nombreUsuario"){
+                    const options = usuariosHook.map((tipo) => {
+                        const valor = Object.entries(tipo)[0][1];
+                        const seleccion = Object.entries(tipo)[1][1];
+                        if (formState !== null && seleccion == formState["nombreUsuario"]) {
+                            return (< option value={valor} key={valor} selected>{seleccion}</option>)
+                        }
+                        return (< option value={valor} key={valor}>{valor}</option>)
+                    })
+
+                    return (
+                        <div className="form-group" key="idusuario">
+                            <label htmlFor="idusuario">Usuario</label>
+                            <select name="idusuario" onChange={handleChange}>
+                                <option value="">Seleccione una opción</option>
+                                {options}
+                            </select>
+                        </div >)
+                }else if (column.key === "idclase") {
+                    const options = clasesHook.map((tipo) => {
+                        const valor = Object.entries(tipo)[0][1];
+                        const seleccion = Object.entries(tipo)[1][1];
+                        if (formState !== null && valor == formState["idclase"]) {
+                            return (< option value={valor} key={valor} selected>{valor}</option>)
+                        }
+                        return (< option value={valor} key={valor}>{valor}</option>)
+                    })
+
+                    return (
+                        <div className="form-group" key="idclase">
+                            <label htmlFor="idclase">Clase</label>
+                            <select name="idclase" onChange={handleChange}>
+                                <option value="">Seleccione una opción</option>
+                                {options}
+                            </select>
+                        </div >)
+                } else {
+                    return (
+                        <div className="form-group" key={column.key}>
+                            <label htmlFor={column.key}>{column.label}</label>
+                            {idx == 0 ?
+                                <input name={column.key} onChange={null} value={formState !== null ? formState[column.key] : null} disabled />
+                                : <input name={column.key} onChange={handleChange} value={formState !== null ? formState[column.key] : null} />
+                            }
+                        </div>)
+                }
+                break;
             default:
                 return (
                     <div className="form-group" key={column.key}>
@@ -131,7 +373,6 @@ export const Modal = ({ closeModal, onSubmit, defaultValue, columns, nombreTabla
                     </div>)
                 break;
         }
-
     }
 
     return (

@@ -23,6 +23,8 @@ public partial class DbSigeexContext : DbContext
 
     public virtual DbSet<Clase> Clases { get; set; }
 
+    public virtual DbSet<ClasesGetTab> ClasesGetTabs { get; set; }
+
     public virtual DbSet<Examene> Examenes { get; set; }
 
     public virtual DbSet<Materia> Materias { get; set; }
@@ -44,6 +46,8 @@ public partial class DbSigeexContext : DbContext
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
     public virtual DbSet<UsuarioClase> UsuarioClases { get; set; }
+
+    public virtual DbSet<UsuarioClaseGetTab> UsuarioClaseGetTabs { get; set; }
 
     public virtual DbSet<UsuariosGetTab> UsuariosGetTabs { get; set; }
 
@@ -94,6 +98,33 @@ public partial class DbSigeexContext : DbContext
             entity.Property(e => e.Idmateria).HasColumnName("IDMateria");
             entity.Property(e => e.IdplanProgramaEducativo).HasColumnName("IDPlanProgramaEducativo");
             entity.Property(e => e.Idprofesor).HasColumnName("IDProfesor");
+        });
+
+        modelBuilder.Entity<ClasesGetTab>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("ClasesGetTab");
+
+            entity.Property(e => e.Idclase).HasColumnName("IDClase");
+            entity.Property(e => e.NombreAcademia)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.NombreBloque)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.NombreCatalogo)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.NombreMateria)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.NombrePlanPrograma)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.NombreUsuario)
+                .HasMaxLength(50)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Examene>(entity =>
@@ -251,6 +282,19 @@ public partial class DbSigeexContext : DbContext
             entity.Property(e => e.IdusuarioClase).HasColumnName("IDUsuarioClase");
             entity.Property(e => e.Idclase).HasColumnName("IDClase");
             entity.Property(e => e.Idusuario).HasColumnName("IDUsuario");
+        });
+
+        modelBuilder.Entity<UsuarioClaseGetTab>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("UsuarioClaseGetTab");
+
+            entity.Property(e => e.Idclase).HasColumnName("IDClase");
+            entity.Property(e => e.IdusuarioClase).HasColumnName("IDUsuarioClase");
+            entity.Property(e => e.NombreUsuario)
+                .HasMaxLength(50)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<UsuariosGetTab>(entity =>
