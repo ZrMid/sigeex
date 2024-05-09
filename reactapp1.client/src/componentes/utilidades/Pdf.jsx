@@ -1,23 +1,65 @@
 /* eslint-disable no-unused-vars */
-import { Document, Text, Page, StyleSheet, Image } from '@react-pdf/renderer'
+import { Document, Text, Page, StyleSheet, View } from '@react-pdf/renderer'
 import { useState } from 'react'
 
-function PDF(info) {
+function Pdf({ nombreExamen, fechaInicio, fechaTermino, reactivos, usuario }) {
 
-    const [infoExamen, setInfoExamen] = useState({});
+    const styles = StyleSheet.create({
+        page: {
+            padding: ' 40px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '30px'
+        },
+        header: {
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '15px'
+        },
+        titulo:{
+            display: 'flex',
+            justifyContent: 'center',
+            fontWeight: 'bold'
+        },
+        reactivos:{
+            display:'flex',
+            flexDirection: 'column',
+            gap: '30px'
+        },
+        reactivo:{
+            paddingBottom:'60px'
+        }
 
-    const info = {
-        materia: "Materia",
-        nombre: "NombreExamen",
 
-    }
+    })
+
     return (
         <Document>
-            <Page>
-                <Text>
+            <Page style={styles.page}>
+                <View style={styles.header}>
+                    <Text style={styles.titulo}>
+                        {nombreExamen}
+                    </Text>
+                    <Text>
+                        Fecha: {fechaInicio.slice(0, 10)}
+                    </Text>
+                    <Text>
+                        Nombre: _____________________________ Calif: ______
+                    </Text>
+                </View>
+                <View style={styles.reactivos}>
+                    {
+                        reactivos.map((reactivo, idx) => (
+                            <Text style={styles.reactivo}>
+                                {idx+1} - {reactivo['reactivo']}
+                            </Text>
+                        ))
+                    }
+                </View>
 
-                </Text>
             </Page>
         </Document>
     )
 }
+
+export default Pdf;

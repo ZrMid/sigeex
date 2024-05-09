@@ -21,7 +21,7 @@ export const MainSis = () => {
         if (userInfo.permiso === "Admin") {
             return <Admin />
         }else if (userInfo.permiso === "Profesor"){
-            return <Profesor />
+            return <Profesor userInfo = {userInfo}/>
         }else{
             return <Alumno />
         }

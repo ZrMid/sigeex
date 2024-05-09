@@ -1,13 +1,16 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unreachable */
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react'
 import '/src/estilos/ProfesorStyle.css'
+import PDF from '/src/componentes/utilidades/Pdf';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 
 const formatDateTime = (date) => {
     return date.toISOString().slice(0, 16); // YYYY-MM-DDTHH:MM
 };
 
-export const Profesor = () => {
+export const Profesor = ( { userInfo } ) => {
     const [estadoExamen, setEstadoExamen] = useState("");
     const [nombreExamen, setNombreExamen] = useState("");
     const [fechaInicio, setFechaInicio] = useState(formatDateTime(new Date()));
@@ -40,10 +43,23 @@ export const Profesor = () => {
         );
     };
 
-    const getContTipoReactivo = (tipo) => {
+    const getReactivo = (e, index) => {
+        console.log(index);
+        setReactivos(
+            reactivos.map((rea, ind) => {
+                if (ind === index) {
+                    return { ...rea, reactivo: e.target.value };
+                  } else {
+                    return rea;
+                  }
+            })
+        );
+    }
+
+    const getContTipoReactivo = (tipo, index) => {
         switch (tipo) {
             case "Pregunta_abierta":
-                return (<textarea rows={5} placeholder='Escribe aqui tu pregunta'></textarea>)
+                return (<textarea rows={5} placeholder='Escribe aqui tu pregunta' onChange={(e) => { getReactivo(e, index)}}></textarea>)
                 break;
             default:
                 return (<p>No se a seleccionado tipo</p>);
@@ -92,13 +108,29 @@ export const Profesor = () => {
                                                 <option>Selecciona un Tipo</option>
                                                 <option>Pregunta_abierta</option>
                                             </select><br />
-                                            {e.tipoReactivo !== "" ? getContTipoReactivo(e.tipoReactivo) : null}
+                                            {e.tipoReactivo !== "" ? getContTipoReactivo(e.tipoReactivo, index) : null}
                                             <br />
                                             <button onClick={() => eliminarReactivo(index)}>Eliminar</button>
                                         </div>
                                     ))
                                 }
                                 <button onClick={() => { setReactivos([...reactivos, { "tipoReactivo": "default" }]) }}>Agregar Reactivo</button>
+                                <PDFDownloadLink document={<PDF 
+                                    nombreExamen = {nombreExamen}
+                                    fechaInicio = {fechaInicio}
+                                    fechaTermino = {fechaTermino}
+                                    reactivos = {reactivos}
+                                    usuario = {userInfo['usuario']}
+                                />} fileName={[nombreExamen+".pdf"]}>
+                                {
+                                    ({ loading, url, error, blob}) =>
+                                        loading ? (
+                                            <button>Loading Document ...</button>
+                                        ) : (
+                                            <button>Descargar Examen</button>
+                                        )
+                                }
+                                </PDFDownloadLink>
                             </div>
                         )
                     }
